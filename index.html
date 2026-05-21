@@ -454,16 +454,61 @@
         <div class="panel-title">Perbandingan Semua Algoritma</div>
         <div class="compare-grid" id="compare-cards"></div>
       </div>
+      
       <div class="panel">
-        <div class="panel-title">Avg Waiting Time</div>
+        <div class="panel-title">Penjelasan Algoritma</div>
+        <div style="font-family:var(--sans);font-size:13px;line-height:1.8;color:var(--text)">
+          <div style="margin-bottom:20px;padding:16px;background:var(--surface2);border-left:3px solid var(--accent);border-radius:8px">
+            <h3 style="font-size:14px;color:var(--accent);margin-bottom:8px">🟦 FCFS (First Come First Served)</h3>
+            <p><strong>Cara Kerja:</strong> Proses dijalankan sesuai dengan urutan kedatangannya. Proses yang tiba pertama akan dijalankan terlebih dahulu hingga selesai, barulah proses berikutnya dijalankan.</p>
+            <p style="margin-top:6px"><strong>Kelebihan:</strong> Sederhana dan mudah diimplementasikan. Tidak ada overhead kompleks.</p>
+            <p style="margin-top:6px"><strong>Kekurangan:</strong> Proses pendek harus menunggu proses panjang (convoy effect). Tidak optimal untuk sistem interaktif. Waktu tunggu bisa sangat lama.</p>
+          </div>
+
+          <div style="margin-bottom:20px;padding:16px;background:var(--surface2);border-left:3px solid var(--accent3);border-radius:8px">
+            <h3 style="font-size:14px;color:var(--accent3);margin-bottom:8px">🟩 SJF (Shortest Job First)</h3>
+            <p><strong>Cara Kerja:</strong> Proses dengan burst time terpendek dijalankan terlebih dahulu. Dari proses-proses yang siap untuk dijalankan, pilih yang memiliki waktu eksekusi paling singkat.</p>
+            <p style="margin-top:6px"><strong>Kelebihan:</strong> Menghasilkan average waiting time terkecil. Optimal untuk meminimalkan waktu tunggu. Meningkatkan throughput sistem.</p>
+            <p style="margin-top:6px"><strong>Kekurangan:</strong> Proses panjang bisa starvation (tidak pernah dijalankan). Sulit memprediksi burst time di muka. Tidak cocok untuk sistem time-sharing.</p>
+          </div>
+
+          <div style="margin-bottom:20px;padding:16px;background:var(--surface2);border-left:3px solid var(--accent4);border-radius:8px">
+            <h3 style="font-size:14px;color:var(--accent4);margin-bottom:8px">🟨 Round Robin (RR)</h3>
+            <p><strong>Cara Kerja:</strong> Setiap proses diberikan quantum time (time slice) yang sama. Jika proses belum selesai setelah quantum habis, proses diletakkan ke belakang antrian dan proses berikutnya dijalankan.</p>
+            <p style="margin-top:6px"><strong>Kelebihan:</strong> Fair dan responsif untuk semua proses. Cocok untuk sistem time-sharing. Menghindari starvation. Response time dapat diprediksi.</p>
+            <p style="margin-top:6px"><strong>Kekurangan:</strong> Banyak context switch dapat membuang waktu. Average turnaround time bisa lebih lama. Performance bergantung pada ukuran quantum.</p>
+          </div>
+
+          <div style="padding:16px;background:var(--surface2);border-left:3px solid var(--accent2);border-radius:8px">
+            <h3 style="font-size:14px;color:var(--accent2);margin-bottom:8px">🟥 Priority Scheduling</h3>
+            <p><strong>Cara Kerja:</strong> Setiap proses memiliki priority value. Proses dengan priority tertinggi (angka terendah = prioritas tertinggi) dijalankan terlebih dahulu. Jika ada proses dengan priority lebih tinggi tiba, ada opsi preemption atau non-preemption.</p>
+            <p style="margin-top:6px"><strong>Kelebihan:</strong> Sistem dapat mengutamakan proses penting. Fleksibel sesuai kebutuhan. Proses real-time dapat ditangani dengan baik.</p>
+            <p style="margin-top:6px"><strong>Kekurangan:</strong> Proses dengan priority rendah bisa mengalami starvation. Overhead dalam pengelolaan priority. Kompleksitas implementasi lebih tinggi.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Metrik Perbandingan</div>
+        <div style="font-family:var(--sans);font-size:12px;line-height:1.6;color:var(--text);margin-bottom:16px">
+          <p><strong>⏱️ Avg Waiting Time (Waktu Tunggu Rata-rata):</strong> Rata-rata waktu yang dihabiskan proses untuk menunggu dalam antrian sebelum mulai dijalankan. <span style="color:var(--accent3)">Semakin kecil semakin baik</span>.</p>
+          <p style="margin-top:10px"><strong>⏳ Avg Turnaround Time (Waktu Putar Balik Rata-rata):</strong> Rata-rata waktu total dari proses tiba hingga proses selesai (= Waiting Time + Burst Time). <span style="color:var(--accent3)">Semakin kecil semakin baik</span>.</p>
+          <p style="margin-top:10px"><strong>📞 Avg Response Time (Waktu Respon Rata-rata):</strong> Rata-rata waktu dari proses tiba hingga pertama kali mulai dijalankan. <span style="color:var(--accent3)">Semakin kecil semakin baik untuk sistem interaktif</span>.</p>
+          <p style="margin-top:10px"><strong>📊 Throughput:</strong> Jumlah proses yang selesai per satuan waktu. <span style="color:var(--accent3)">Semakin besar semakin baik</span>.</p>
+          <p style="margin-top:10px"><strong>💻 CPU Utilization:</strong> Persentase waktu CPU digunakan untuk menjalankan proses (tidak idle). <span style="color:var(--accent3)">Semakin tinggi semakin baik</span>.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Avg Waiting Time (Waktu Tunggu Rata-rata)</div>
         <div class="bar-chart" id="bar-wait"></div>
       </div>
       <div class="panel">
-        <div class="panel-title">Avg Turnaround Time</div>
+        <div class="panel-title">Avg Turnaround Time (Waktu Putar Balik Rata-rata)</div>
         <div class="bar-chart" id="bar-turn"></div>
       </div>
       <div class="panel">
-        <div class="panel-title">Avg Response Time</div>
+        <div class="panel-title">Avg Response Time (Waktu Respon Rata-rata)</div>
         <div class="bar-chart" id="bar-resp"></div>
       </div>
     </div>
@@ -684,8 +729,8 @@ function renderTable(containerId, data) {
     <table class="result-table">
       <thead>
         <tr>
-          <th>PID</th><th>Arrival</th><th>Burst</th><th>Priority</th>
-          <th>Start</th><th>Finish</th><th>WT</th><th>TAT</th><th>RT</th>
+          <th>PID</th><th>Kedatangan</th><th>Burst</th><th>Prioritas</th>
+          <th>Mulai</th><th>Selesai</th><th>WT</th><th>TAT</th><th>RT</th>
         </tr>
       </thead>
       <tbody>
@@ -701,7 +746,7 @@ function renderTable(containerId, data) {
       </tbody>
     </table>
     <div style="font-family:var(--mono);font-size:10px;color:var(--text-muted);margin-top:8px">
-      WT = Waiting Time &nbsp;|&nbsp; TAT = Turnaround Time &nbsp;|&nbsp; RT = Response Time
+      WT = Waktu Tunggu &nbsp;|&nbsp; TAT = Waktu Putar Balik &nbsp;|&nbsp; RT = Waktu Respon
     </div>
   `;
 }
@@ -709,11 +754,11 @@ function renderTable(containerId, data) {
 function renderMetrics(containerId, result) {
   const el = document.getElementById(containerId);
   const m = [
-    {label:'Avg Waiting Time', value:result.avgWT.toFixed(2), unit:'ms', color:'var(--accent)'},
-    {label:'Avg Turnaround', value:result.avgTAT.toFixed(2), unit:'ms', color:'var(--accent4)'},
-    {label:'Avg Response Time', value:result.avgRT.toFixed(2), unit:'ms', color:'var(--accent2)'},
-    {label:'Throughput', value:result.throughput, unit:'proc/ms', color:'var(--accent3)'},
-    {label:'CPU Utilization', value:result.cpuUtil+'%', unit:'', color:'#b388ff'},
+    {label:'Waktu Tunggu Rata-rata', value:result.avgWT.toFixed(2), unit:'ms', color:'var(--accent)'},
+    {label:'Waktu Putar Balik Rata-rata', value:result.avgTAT.toFixed(2), unit:'ms', color:'var(--accent4)'},
+    {label:'Waktu Respon Rata-rata', value:result.avgRT.toFixed(2), unit:'ms', color:'var(--accent2)'},
+    {label:'Throughput', value:result.throughput, unit:'proses/ms', color:'var(--accent3)'},
+    {label:'Utilisasi CPU', value:result.cpuUtil+'%', unit:'', color:'#b388ff'},
   ];
   el.innerHTML = m.map(m=>`
     <div class="metric-card">
@@ -726,7 +771,7 @@ function renderMetrics(containerId, result) {
 
 function renderCompare(results) {
   const algos = ['fcfs','sjf','rr','priority'];
-  const labels = {fcfs:'FCFS',sjf:'SJF',rr:'Round Robin',priority:'Priority'};
+  const labels = {fcfs:'FCFS',sjf:'SJF',rr:'Round Robin',priority:'Prioritas'};
   const themeColor = {fcfs:'var(--accent)',sjf:'var(--accent3)',rr:'var(--accent4)',priority:'var(--accent2)'};
 
   // find best
@@ -742,23 +787,23 @@ function renderCompare(results) {
       <div class="compare-card ${a}">
         <div class="compare-algo" style="color:${themeColor[a]}">${labels[a]}</div>
         <div class="compare-row">
-          <span class="compare-key">Avg WT</span>
-          <span class="compare-val">${r.avgWT.toFixed(2)} ${r.avgWT===bestWT?'<span class="best-badge">BEST</span>':''}</span>
+          <span class="compare-key">WT Rata-rata</span>
+          <span class="compare-val">${r.avgWT.toFixed(2)} ${r.avgWT===bestWT?'<span class="best-badge">TERBAIK</span>':''}</span>
         </div>
         <div class="compare-row">
-          <span class="compare-key">Avg TAT</span>
-          <span class="compare-val">${r.avgTAT.toFixed(2)} ${r.avgTAT===bestTAT?'<span class="best-badge">BEST</span>':''}</span>
+          <span class="compare-key">TAT Rata-rata</span>
+          <span class="compare-val">${r.avgTAT.toFixed(2)} ${r.avgTAT===bestTAT?'<span class="best-badge">TERBAIK</span>':''}</span>
         </div>
         <div class="compare-row">
-          <span class="compare-key">Avg RT</span>
-          <span class="compare-val">${r.avgRT.toFixed(2)} ${r.avgRT===bestRT?'<span class="best-badge">BEST</span>':''}</span>
+          <span class="compare-key">RT Rata-rata</span>
+          <span class="compare-val">${r.avgRT.toFixed(2)} ${r.avgRT===bestRT?'<span class="best-badge">TERBAIK</span>':''}</span>
         </div>
         <div class="compare-row">
           <span class="compare-key">Throughput</span>
-          <span class="compare-val">${r.throughput} ${parseFloat(r.throughput)===bestTP?'<span class="best-badge">BEST</span>':''}</span>
+          <span class="compare-val">${r.throughput} ${parseFloat(r.throughput)===bestTP?'<span class="best-badge">TERBAIK</span>':''}</span>
         </div>
         <div class="compare-row">
-          <span class="compare-key">CPU Util.</span>
+          <span class="compare-key">Util. CPU</span>
           <span class="compare-val">${r.cpuUtil}%</span>
         </div>
       </div>
