@@ -698,33 +698,56 @@ function sjf(processes) {
 }
 
 // Round Robin
-function roundRobin(processes, quantum) {
-  const procs = processes.map(p=>({...p,remaining:p.bt,firstRun:-1,done:false}));
-  const gantt=[]; let time=0;
-  const queue=[];
-  const results={};
-  procs.sort((a,b)=>a.at-b.at);
-  let i=0;
-  // seed initial
-  while(i<procs.length && procs[i].at<=time) { queue.push(procs[i]); i++; }
-  if(queue.length===0 && i<procs.length){ time=procs[i].at; queue.push(procs[i]); i++; }
-  while(queue.length>0){
-    const p=queue.shift();
-    if(p.firstRun===-1) p.firstRun=time;
-    const exec=Math.min(quantum,p.remaining);
-    gantt.push({name:p.name,start:time,end:time+exec,color:p.color});
-    time+=exec; p.remaining-=exec;
-    // add newly arrived
-    while(i<procs.length && procs[i].at<=time){ queue.push(procs[i]); i++; }
-    if(p.remaining>0) queue.push(p);
-    else {
-      p.done=true;
-      results[p.id]={start:p.firstRun,finish:time,response:p.firstRun-p.at};
-    }
-    if(queue.length===0 && i<procs.length){ time=procs[i].at; queue.push(procs[i]); i++; }
-  }
-  return buildResult(processes, gantt, results);
-}
+// Round Robin (RR) - Setiap proses berjalan selama durasi kuantum waktu secara bergiliran (preemptive)
+        function roundRobin(processes, quantum) {
+            // Inisialisasi: sisa burst time (remaining), tanda eksekusi pertama (firstRun), dan status selesai (done)
+            const procs = processes.map(p => ({ ...p, remaining: p.bt, firstRun: -1, done: false }));
+            const gantt = []; let time = 0; // Gantt menyimpan eksekusi dan let time sebagai penunjuk waktu global CPU
+            const queue = []; // Ready queue untuk menampung proses yang siap dieksekusi
+            const results = {}; // Penampung data metrik hasil eksekusi akhir
+            
+            // Urutkan seluruh proses berdasarkan waktu kedatangannya (Arrival Time)
+            procs.sort((a, b) => a.at - b.at);
+            let i = 0;
+            
+            // Masukkan semua proses yang sudah tiba pada t = 0 (waktu awal) ke dalam ready queue
+            while (i < procs.length && procs[i].at <= time) { queue.push(procs[i]); i++; }
+            
+            // CPU Idle check: Jika antrean kosong tapi masih ada proses yang belum tiba, lompat ke waktu kedatangan terdekat
+            if (queue.length === 0 && i < procs.length) { time = procs[i].at; queue.push(procs[i]); i++; }
+            
+            // Jalankan perulangan penjadwalan selama ready queue tidak kosong
+            while (queue.length > 0) {
+                const p = queue.shift(); // Ambil proses paling depan dalam antrean
+                
+                // Catat waktu mulai pertama kali proses disentuh CPU (untuk hitung response time)
+                if (p.firstRun === -1) p.firstRun = time;
+                
+                // Eksekusi proses sebesar sisa burst time atau durasi kuantum waktu (mana yang terkecil)
+                const exec = Math.min(quantum, p.remaining);
+                gantt.push({ name: p.name, start: time, end: time + exec, color: p.color });
+                
+                // Perbarui waktu global CPU dan kurangi sisa burst time proses tersebut
+                time += exec; p.remaining -= exec;
+                
+                // Masukkan proses baru yang tiba ketika proses sebelumnya sedang berjalan ke dalam ready queue
+                while (i < procs.length && procs[i].at <= time) { queue.push(procs[i]); i++; }
+                
+                if (p.remaining > 0) {
+                    // Jika proses belum selesai, kembalikan proses tersebut ke bagian belakang ready queue
+                    queue.push(p);
+                } else {
+                    // Jika proses telah selesai, tandai selesai dan simpan metrik waktu rampung dan responnya
+                    p.done = true;
+                    results[p.id] = { start: p.firstRun, finish: time, response: p.firstRun - p.at };
+                }
+                
+                // CPU Idle check: Jika antrean kosong tapi masih ada proses lain di masa depan, majukan pointer waktu
+                if (queue.length === 0 && i < procs.length) { time = procs[i].at; queue.push(procs[i]); i++; }
+            }
+            // Agregasi hasil akhir untuk kalkulasi rata-rata performa
+            return buildResult(processes, gantt, results);
+        }
 
 // Priority (non-preemptive, lower number = higher priority)
 function priorityScheduling(processes) {
